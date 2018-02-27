@@ -9,7 +9,7 @@ def terminalstate(state):
         return False
 
 
-def minimax(state):
+def minimax(state, a, b):
     turn,heap=state
     if terminalstate(state):
         return utilitystatic(state)
@@ -17,17 +17,22 @@ def minimax(state):
         if heap == 'min':
             value = 250
             for x in successorsgenerator(state):
-                value = min(value, minimax(x))
+                value = min(value, minimax(x, a, b))
+                b = min(b,value)
+                if b <= a:
+                    break
         elif heap == 'max':
             value = -250
             for x in successorsgenerator(state):
-                value = max(value, minimax(x))
+                value = max(value, minimax(x, a, b))
+                a = max(a, value)
+                if b<=a:
+                    break
     result = state, value
     return value
 
 
 def utilitystatic(state):
-    turn, heap = state
     assert terminalstate(state)
     if state[1] == 'max':
         return -100
@@ -63,7 +68,7 @@ def decrease(state):
 def decision(state):
     compare={'max': max, 'min': min}
     lastgeneration = successorsgenerator(state)
-    lastgenerationutilies= [minimax(x) for x  in lastgeneration]
+    lastgenerationutilies= [minimax(x, -250, 250) for x  in lastgeneration]
     combined= list(zip(lastgeneration, lastgenerationutilies))
     calledfunction=compare[state[1]]
     result = calledfunction(combined,key=lambda item:item[1])
