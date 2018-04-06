@@ -53,8 +53,7 @@ while True:
    if totalstick == 0:
        print ('Player'+ str(x+1)+ ' Win')
        break
-   x = x + 1
-   x = x % 2
+
 
 
 
